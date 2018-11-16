@@ -3,6 +3,7 @@ import sys, subprocess, tempfile, shutil, shlex, time, random
 from walt.common.apilink import ServerAPILink
 from walt.common.tcp import write_pickle, client_sock_file, \
                             Requests
+from walt.common.update import check_auto_update
 from walt.common.constants import WALT_SERVER_TCP_PORT
 
 MANUFACTURER = "QEMU"
@@ -16,6 +17,10 @@ KVM_ARGS = "kvm -m " + str(KVM_RAM) + "\
                 -net bridge,br=walt-net \
                 -serial mon:stdio \
                 -no-reboot"
+
+def do_check_auto_update(server_ip):
+    with ServerAPILink(server_ip, 'VSAPI') as server:
+        check_auto_update(server, 'walt-virtual')
 
 def get_qemu_product_name():
     line = subprocess.check_output('kvm -machine help | grep default', shell=True)
@@ -189,6 +194,7 @@ def run():
             random_wait()
             print("Starting...")
             env = get_env_start()
+            do_check_auto_update(env['next-server'])
             env['TMPDIR'] = TMPDIR
             send_register_request(env)
             add_network_info(env)
