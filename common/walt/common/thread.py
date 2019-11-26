@@ -98,7 +98,7 @@ PRIORITIES = { 'RESULT':0, 'EXCEPTION':1, 'API_CALL':2 }
 class RPCSession(object):
     def __init__(self, connector, remote_req_id, local_service):
         self.connector = connector
-        self.async = AttrCallAggregator(self.async_runner)
+        self.m_async = AttrCallAggregator(self.async_runner)
         self.sync = AttrCallAggregator(self.sync_runner)
         self.remote_req_id = remote_req_id
         self.local_service = local_service
@@ -133,7 +133,7 @@ class RPCThreadConnector(ThreadConnector):
         self.results = {}
         self.default_service = AttrCallRunner(default_service)
         self.default_session = self.create_session(-1, default_service)
-        self.async = self.default_session.async
+        self.m_async = self.default_session.m_async
         self.sync = self.default_session.sync
     def local_service(self, local_service):
         return self.create_session(-1, local_service)

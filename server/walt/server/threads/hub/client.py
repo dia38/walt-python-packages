@@ -16,7 +16,7 @@ class APISessionManager(object):
         self.requester = AttrCallAggregator(self.forward_requester_request)
         self.rpc_session = self.main.local_service(self.requester)
     def record_task(self, attr, args, kwargs):
-        self.rpc_session.async.run_task(self.session_id, attr, args, kwargs).then(
+        self.rpc_session.m_async.run_task(self.session_id, attr, args, kwargs).then(
             self.return_result
         )
     def fileno(self):
